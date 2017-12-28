@@ -19,9 +19,11 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 from . import views
 
+app_name = "profile_project"
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^accounts/', include('accounts.urls', namespace='accounts')),
+    url(r'^accounts/', include(('accounts.urls', app_name), namespace='accounts')),
     url(r'^$', views.home, name='home'),
 ]
 urlpatterns += staticfiles_urlpatterns()
