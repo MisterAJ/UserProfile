@@ -5,6 +5,8 @@ from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
+from . import forms
+
 
 def sign_in(request):
     form = AuthenticationForm()
@@ -32,9 +34,9 @@ def sign_in(request):
 
 
 def sign_up(request):
-    form = UserCreationForm()
+    form = forms.AccountForm()
     if request.method == 'POST':
-        form = UserCreationForm(data=request.POST)
+        form = forms.AccountForm(data=request.POST)
         if form.is_valid():
             form.save()
             user = authenticate(
