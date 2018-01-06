@@ -21,7 +21,7 @@ def sign_in(request):
                 if user.is_active:
                     login(request, user)
                     return HttpResponseRedirect(
-                        reverse('accounts:profile')
+                        reverse('home')
                     )
                 else:
                     messages.error(
@@ -47,17 +47,16 @@ def sign_up(request):
                 username=username,
                 password=form.cleaned_data['password1']
             )
-            account_form = AccountForm()
-            account_form.first_name = username
-            account_form.user = user
-            if account_form.is_valid():
-                account_form.save()
+            account = Account()
+            account.user = user
+            account.first_name = username
+            account.save()
             login(request, user)
             messages.success(
                 request,
                 "You're now a user! You've been signed in, too."
             )
-            return HttpResponseRedirect(reverse('accounts:profile'))
+            return HttpResponseRedirect(reverse('home'))
     return render(request, 'accounts/sign_up.html', {'form': form})
 
 @login_required
@@ -67,34 +66,11 @@ def sign_out(request):
     return HttpResponseRedirect(reverse('home'))
 
 @login_required
-def profile(request):
-    form = AccountForm()
-    if request.method == 'POST':
-        form = AccountForm(data=request.POST)
-        if form.is_valid():
-            if request.user.is_authenticated():
-                form.save()
-                return HttpResponseRedirect(
-                    reverse('accounts:profile')
-                )
-            else:
-                messages.error(
-                    request,
-                    "That user account has been disabled."
-                )
-        else:
-            messages.error(
-                request,
-                "Form input is invalid."
-            )
-    return render(request, 'accounts/profile.html', {'form': form})
-
-@login_required
 def edit_profile(request, account_pk):
     account = get_object_or_404(Account, pk=account_pk)
     form = AccountForm(instance=account)
     if request.method == 'POST':
-        form = AccountForm(instance=account, data=request.POST)
+        form = AccountForm(request.POST, request.FILES, instance=account)
         if form.is_valid():
             if request.user.is_authenticated():
                 form.user = request.user
@@ -114,10 +90,12 @@ def edit_profile(request, account_pk):
             )
     return render(request, 'accounts/profile.html', {'form': form})
 
+@login_required
 def bio(request):
     '''User Bio Page'''
     return render(request, 'accounts/bio.html')
 
+@login_required
 def change_password(request):
     form = PasswordChangeForm(request.user)
     if request.method == 'POST':

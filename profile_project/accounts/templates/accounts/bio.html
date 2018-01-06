@@ -1,14 +1,10 @@
 {% extends "layout.html" %}
 
-{% block title %}{{ user.last_name }}'s account'{% endblock %}
+{% block title %}{{ user.account.first_name }} {{user.account.last_name }}'s Bio!{% endblock %}
 
 {% block body %}
 
-{% if user.account.avatar.url %}
-  <img class="smaller-image" src= {{ user.account.avatar.url }}>
-{% endif %}
-
-<h1>{{ user.account.first_name }} {{user.account.last_name }}'s Bio!<h1>
+<h1>Bio!<h1>
 
   <ol class="profile">
     {% if user.account.date_of_birth %}
@@ -24,5 +20,10 @@
         <p class="bio">{{ user.account.email }}</p>
       </h2>
     {% endif %}
+
+    {% if user.account.avatar %}
+    <img class="profile-image" src= {{ user.account.avatar.url }}>
+    {% endif %}
+
   </ol>
 {% endblock %}
