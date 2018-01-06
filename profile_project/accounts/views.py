@@ -1,13 +1,12 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import (AuthenticationForm, UserCreationForm,
-                                        PasswordChangeForm)
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 
-from .forms import AccountForm
+from .forms import AccountForm, PasswordForm
 from .models import Account
 
 
@@ -97,16 +96,12 @@ def bio(request):
 
 @login_required
 def change_password(request):
-    form = PasswordChangeForm(request.user)
+    form = PasswordForm(request.user)
     if request.method == 'POST':
-        form = PasswordChangeForm(request.user, data=request.POST)
+        form = PasswordForm(request.user, data=request.POST)
+        form.username = request.user.username
         if form.is_valid():
-            old = form.cleaned_data['old_password']
-            new = form.cleaned_data['new_password1']
-            if old == new:
-                messages.error(request, 'You can not use the same password.')
-            else:
-                form.save()
-                messages.success(request, 'You have updated your password.')
-                return HttpResponseRedirect(reverse('accounts:bio'))
+            form.save()
+            messages.success(request, 'You have updated your password.')
+            return HttpResponseRedirect(reverse('accounts:bio'))
     return render(request, 'accounts/password.html', {'form': form})

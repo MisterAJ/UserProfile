@@ -1,5 +1,8 @@
+import re
+from django.contrib.auth.forms import PasswordChangeForm
 from django.forms import (EmailField, ModelForm, ValidationError,
                           CharField, HiddenInput)
+                          
 from .models import Account
 
 class AccountForm(ModelForm):
@@ -29,3 +32,33 @@ class AccountForm(ModelForm):
         bio = cleaned_data.get('bio')
         if len(bio) < 10:
             raise ValidationError("The bio must be at least ten characters")
+
+
+class PasswordForm(PasswordChangeForm):
+    username = CharField(required=False, widget=HiddenInput)
+
+    def clean(self):
+        password1 = self.cleaned_data.get('new_password1')
+        old = self.cleaned_data.get('old_password')
+        username = self.cleaned_data.get('username')
+
+        if len(password1) < 14:
+            raise ValidationError(
+                "The new password must be at least 14 characters long.")
+
+        # At least one letter and one non-letter
+        first_isalpha = password1[0].isalpha()
+        if all(c.isalpha() == first_isalpha for c in password1):
+            raise ValidationError(
+                "The new password must contain at least one letter " \
+                 "and at least one digit or punctuation character.")
+
+        if username in password1:
+            raise ValidationError("Password main not contain your username.")
+
+        if password1 == old:
+            raise ValidationError("Must be different than your old password.")
+
+        if all(c.islower() for c in re.sub(r'\W+', '', password1)):
+            raise ValidationError('Must contain at least 1 Upper case letter')
+ 
