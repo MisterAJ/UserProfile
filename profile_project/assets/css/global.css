@@ -249,7 +249,7 @@ body {
 
 /* line 6, ../sass/circle/core/layout.sass */
 .bounds {
-  max-width: 1080px;
+  max-width: 80%;
   margin: 0 auto;
 }
 
@@ -2104,4 +2104,9 @@ input[type="email"].circle--input--h6, input[type="number"].circle--input--h6, i
 /* line 13, ../sass/global.sass */
 .logo:hover {
   box-shadow: 0 0 0 15px #fff inset;
+}
+
+.bio {
+  margin-left: 50px;
+  color: #222
 }
