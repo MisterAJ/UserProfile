@@ -2110,3 +2110,9 @@ input[type="email"].circle--input--h6, input[type="number"].circle--input--h6, i
   margin-left: 50px;
   color: #222
 }
+
+.profile-image {
+  max-width: 50%;
+  margin: auto;
+  border-radius: 20px
+}
