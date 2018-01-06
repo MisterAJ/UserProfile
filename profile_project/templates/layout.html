@@ -45,8 +45,9 @@
             <div class="circle--fluid--cell circle--fluid--primary">
                 <nav>
                     <ul class="circle--inline">
-                        <li><a href="#">nav</a></li>
-                        <li><a href="#">here?</a></li>
+                        {% if user.is_authenticated %}
+                            <li><a href="{% url 'accounts:bio' %}">Bio</a></li>
+                        {% endif %}    
                     </ul>
                 </nav>
             </div>
@@ -58,8 +59,8 @@
                             <li><a href="{% url 'accounts:sign_in' %}">Sign
                                 In</a></li>
                         {% else %}
-                            <!-- view profile link here? -->
-                            <!-- edit profile link here? -->
+                            <li><a href="{% url 'accounts:profile' account_pk=user.account.pk %}">Edit Profile</a></li>
+                            <li><a href="{% url 'accounts:edit_password' %}">Change Password</a></li>
                             <li><a href="{% url 'accounts:sign_out' %}">Sign Out</a></li>
                         {% endif %}
                     </ul>

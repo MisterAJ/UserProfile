@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ user.last_name }}'s account'{% endblock %}
+
+{% block body %}
+
+{% if user.account.avatar.url %}
+  <img class="smaller-image" src= {{ user.account.avatar.url }}>
+{% endif %}
+
+<h1>{{ user.account.first_name }} {{user.account.last_name }}'s Bio!<h1>
+
+  <ol class="profile">
+    {% if user.account.date_of_birth %}
+      <h2>Date of birth:
+        <p class="bio">{{ user.account.date_of_birth }}</p>
+      </h2>
+    {% endif %}
+    <h2>Bio:
+      <p class="bio">{{ user.account.bio }}</p>
+    </h2>
+    {% if user.account.email %}
+      <h2>Email:
+        <p class="bio">{{ user.account.email }}</p>
+      </h2>
+    {% endif %}
+  </ol>
+{% endblock %}
